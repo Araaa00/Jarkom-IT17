@@ -146,8 +146,8 @@ ping google.com -c 5
 ```
 #### Output
 
-<img scr="img/1.1">
-<img scr="img/1.2">
+<img scr="img/1.1.png">
+<img scr="img/1.2.png">
 
 ### Soal 2
 
