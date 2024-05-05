@@ -146,11 +146,15 @@ ping google.com -c 5
 ```
 #### Output
 
+<img scr="img/1.1">
+<img scr="img/1.2">
+
 ### Soal 2
 
 Karena para pasukan membutuhkan koordinasi untuk mengambil airdrop, maka buatlah sebuah domain yang mengarah ke Stalber dengan alamat airdrop.xxxx.com dengan alias www.airdrop.xxxx.com dimana xxxx merupakan kode kelompok. Contoh : airdrop.it01.com
 
 #### Script
+
 
 
 
