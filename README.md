@@ -1,6 +1,6 @@
-# Jarkom-Modul-2-IT17-2024
+# Jarkom-Modul-3-IT17-2024
 
-##### Praktikum Jaringan Komputer Modul 2 Tahun 2023
+##### Praktikum Jaringan Komputer Modul 3 Tahun 2024
 
 ### Author
 | Nama | NRP |
@@ -8,254 +8,312 @@
 | Mutiara Nurhaliza | 5027221010   |
 | Aqila Aqsa | 5027211032   |
 
-#Laporan Resmi
+# Laporan Resmi
 
 ### Topologi
 
 
 ### Config
-#### Erangel
+#### Arakis (Router)
 ```
- auto eth0
+auto eth0
 iface eth0 inet dhcp
 
 auto eth1
 iface eth1 inet static
-	address 10.72.1.1
+	address 10.72.1.0
 	netmask 255.255.255.0
 
 auto eth2
 iface eth2 inet static
-	address 10.72.2.1
+	address 10.72.2.0
 	netmask 255.255.255.0
 
 auto eth3
 iface eth3 inet static
-	address 10.72.3.1
+	address 10.72.3.0
+	netmask 255.255.255.0
+
+auto eth4
+iface eth4 inet static
+	address 10.72.4.0
 	netmask 255.255.255.0
 ```
-#### Pocinki 
+#### Mohiam (DHCP Server) 
 ```
- auto eth0
+auto eth0
 iface eth0 inet static
 	address 10.72.3.2
 	netmask 255.255.255.0
-	gateway 10.72.3.1
+	gateway 10.72.3.0
 ```
 
-#### Serverny 
+#### Irulan (DNS Server) 
 ```
 auto eth0
 iface eth0 inet static
-	address 10.72.1.4
+	address 10.72.4.1
 	netmask 255.255.255.0
-	gateway 10.72.1.1
+	gateway 10.72.4.0
 ```
 
-#### Lipovka 
+#### Chani (Database Server) 
 ```
 auto eth0
 iface eth0 inet static
-	address 10.72.1.2
+	address 10.72.4.1
 	netmask 255.255.255.0
-	gateway 10.72.1.1
+	gateway 10.72.4.0
 ```
 
-#### Stalber 
+#### Stilgar (Load Balancer) 
 ```
 auto eth0
 iface eth0 inet static
-	address 10.72.1.3
+	address 10.72.4.2
 	netmask 255.255.255.0
-	gateway 10.72.1.1
+	gateway 10.72.4.0
 ```
-#### Ruins 
+#### Leto (Laravel Worker) 
+```
+auto eth0
+iface eth0 inet static
+	address 10.72.2.1
+	netmask 255.255.255.0
+	gateway 10.72.2.0
+```
+
+#### Duncan (Laravel Worker) 
 ```
 auto eth0
 iface eth0 inet static
 	address 10.72.2.2
 	netmask 255.255.255.0
-	gateway 10.72.2.1
+	gateway 10.72.2.0
 ```
 
-#### Apartments 
-```
-auto eth0
-iface eth0 inet static
-	address 10.72.2.5
-	netmask 255.255.255.0
-	gateway 10.72.2.1
-```
-
-#### Georgopol 
+#### Jessica (Laravel Worker) 
 ```
 auto eth0
 iface eth0 inet static
 	address 10.72.2.3
 	netmask 255.255.255.0
-	gateway 10.72.2.1
+	gateway 10.72.2.0
 ```
 
-#### Mylta 
+#### Vladimir (PHP Worker) 
 ```
 auto eth0
 iface eth0 inet static
-	address 10.72.2.4
+	address 10.72.1.1
 	netmask 255.255.255.0
-	gateway 10.72.2.1
+	gateway 10.72.1.0
+```
+#### Rabban (PHP Worker)
+```
+auto eth0
+iface eth0 inet static
+	address 10.72.1.2
+	netmask 255.255.255.0
+	gateway 10.72.1.0
+```
+#### Vladimir (PHP Worker) 
+```
+auto eth0
+iface eth0 inet static
+	address 10.72.1.3
+	netmask 255.255.255.0
+	gateway 10.72.1.0
 ```
 
-### Inisiasi .bashrc 
 
-#### Erangel
-```
-iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 192.173.0.0/16
-echo 'nameserver 192.168.122.1' > /etc/resolv.conf
-```
-#### Pochinki & Georgopol
-```
-echo 'nameserver 192.168.122.1' > /etc/resolv.conf
-apt-get update
-apt-get install bind9 -y      
-```
-#### Client
-```
-echo -e '
-nameserver 10.72.3.2 
-nameserver 10.72.2.3 
-nameserver 192.168.122.1
-' > /etc/resolv.conf
-apt-get update
-apt-get install dnsutils -y
-apt-get install lynx -y
-```
-
-### Soal 1
-
-Membuat jaringan komputer yang akan digunakan sebagai alat komunikasi. Sesuaikan rancangan Topologi dengan rancangan dan pembagian yang berada di link yang telah disediakan, dengan ketentuan nodenya sebagai berikut :
-DNS Master akan diberi nama Pochinki, sesuai dengan kota tempat dibuatnya server tersebut
-Karena ada kemungkinan musuh akan mencoba menyerang Server Utama, maka buatlah DNS Slave Georgopol yang mengarah ke Pochinki
-Markas pusat juga meminta dibuatkan tiga Web Server yaitu Severny, Stalber, dan Lipovka. Sedangkan Mylta akan bertindak sebagai Load Balancer untuk server-server tersebut
-
-Melakukan setup IP dan configurasi yang tertera diatas terlebih dahulu. Kemudian, melakukan testing client Apartments dan Ruins
+### Soal 0
+Planet Caladan sedang mengalami krisis karena kehabisan spice, klan atreides berencana untuk melakukan eksplorasi ke planet arakis dipimpin oleh duke leto mereka meregister domain name atreides.yyy.com untuk worker Laravel mengarah pada Leto Atreides . Namun ternyata tidak hanya klan atreides yang berusaha melakukan eksplorasi, Klan harkonen sudah mendaftarkan domain name harkonen.yyy.com untuk worker PHP (0) mengarah pada Vladimir Harkonen
 
 #### Script
 
 ```
-ping google.com -c 5
+echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+apt-get update
+apt-get install bind9 -y  
+
+echo "zone \"atreides.IT17.com\" {
+	type master;
+	file \"/etc/bind/jarkom/atreides.IT17.com\";
+};
+
+zone \"harkonen.IT17.com\" {
+	type master;
+	file \"/etc/bind/jarkom/harkonen.IT17.com\";
+};
+" > /etc/bind/named.conf.local
+
+mkdir /etc/bind/jarkom
+
+atreides="
+;
+;BIND data file for local loopback interface
+;
+\$TTL    604800
+@    IN    SOA    atreides.IT17.com. root.atreides.IT17.com. (
+        2        ; Serial
+                604800        ; Refresh
+                86400        ; Retry
+                2419200        ; Expire
+                604800 )    ; Negative Cache TTL
+;                   
+@    IN    NS    atreides.IT17.com.
+@       IN    A    10.72.2.1
+"
+echo "$atreides" > /etc/bind/jarkom/atreides.IT17.com
+
+harkonen="
+;
+;BIND data file for local loopback interface
+;
+\$TTL    604800
+@    IN    SOA    harkonen.IT17.com. root.harkonen.IT17.com. (
+        2        ; Serial
+                604800        ; Refresh
+                86400        ; Retry
+                2419200        ; Expire
+                604800 )    ; Negative Cache TTL
+;                   
+@    IN    NS    harkonen.IT17.com.
+@       IN    A    10.72.1.1
+"
+echo "$harkonen" > /etc/bind/jarkom/harkonen.IT17.com
+
+service bind9 restart
+
 ```
 #### Output
 
 <img src="img/1.1.png">
 <img src="img/1.2.png">
 
+### Soal 1
+
+Lakukan konfigurasi sesuai dengan peta yang sudah diberikan. 
+
+#### Output
+Sesuai konfigurasi diatas
+
 ### Soal 2
 
-Karena para pasukan membutuhkan koordinasi untuk mengambil airdrop, maka buatlah sebuah domain yang mengarah ke Stalber dengan alamat airdrop.xxxx.com dengan alias www.airdrop.xxxx.com dimana xxxx merupakan kode kelompok. Contoh : airdrop.it01.com
+Client yang melalui House Harkonen mendapatkan range IP dari [prefix IP].1.14 - [prefix IP].1.28 dan [prefix IP].1.49 - [prefix IP].1.70
 
-#### Script
+Melakukan setup DHCP Relay terlebih dahulu pada Arakis.
+
+` /etc/default/isc-dhcp-relay `
+```
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.72.0.0/16
+apt-get update
+apt install isc-dhcp-relay -y
+
+service isc-dhcp-relay start 
+
+echo '# Defaults for isc-dhcp-relay initscript
+
+# sourced by /etc/init.d/isc-dhcp-relay 
+# installed at /etc/default/isc-dhcp-relay by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+# What servers should the DHCP relay forward requests to?
+SERVERS="10.72.3.2"
+
+# On what interfaces should the DHCP relay (dhrelay) serve DHCP requests?
+INTERFACES="eth1 eth2 eth3 eth4"
+
+# Additional options that are passed to the DHCP relay daemon?
+OPTIONS=""' > /etc/default/isc-dhcp-relay
+
+
+echo net.ipv4.ip_forward=1 > /etc/sysctl.conf
+
+service isc-dhcp-relay restart 
+```
+Konfigurasi DHCP Server pada Mohiam
 
 ```
-echo 'zone "airdrop.IT17.com" {
-        type master;
-        file "/etc/bind/jarkom/airdrop.IT17.com";
-};' > /etc/bind/named.conf.local
+echo 'nameserver 10.72.3.1' >> /etc/resolv.conf   # Pastikan DNS Server sudah berjalan 
+apt-get update
+apt-get install isc-dhcp-server -y
 
-mkdir /etc/bind/jarkom
+interfaces="INTERFACESv4=\"eth0\"
+INTERFACESv6=\"\"
+"
+echo "$interfaces" > /etc/default/isc-dhcp-server
 
-cp /etc/bind/db.local /etc/bind/jarkom/airdrop.IT17.com
+subnet="option domain-name \"example.org\";
+option domain-name-servers ns1.example.org, ns2.example.org;
 
-echo '
-;
-; BIND data file for local loopback interface
-;
-$TTL    604800
-@       IN      SOA     airdrop.IT17.com. root.airdrop.IT17.com. (
-                        2024050301      ; Serial
-                         604800         ; Refresh
-                          86400         ; Retry
-                        2419200         ; Expire
-                         604800 )       ; Negative Cache TTL
-;
-@       IN      NS      airdrop.IT17.com.
-@       IN      A       10.72.1.3
-www     IN      CNAME   airdrop.IT17.com.' > /etc/bind/jarkom/airdrop.IT17.com
+subnet 10.72.1.0 netmask 255.255.255.0 {
+    range 10.72.1.14 10.72.1.28;
+    range 10.72.1.49 10.72.1.70;
+    option routers 10.72.1.0;
+}
 
-service bind9 restart
-```
-#### Output
-<img src="img/2.1.png">
-<img src="img/2.2.png">
+subnet 10.72.2.0 netmask 255.255.255.0 {
+}
 
-### Soal 3
+subnet 10.72.3.0 netmask 255.255.255.0 {
+}
 
-Para pasukan juga perlu mengetahui mana titik yang sedang di bombardir artileri, sehingga dibutuhkan domain lain yaitu redzone.xxxx.com dengan alias www.redzone.xxxx.com yang mengarah ke Severny
+subnet 10.72.4.0 netmask 255.255.255.0 {
+}
+"
+echo "$subnet" > /etc/dhcp/dhcpd.conf
 
-
-#### Script
-
-```
-echo 'zone "redzone.IT17.com" {
-        type master;
-        file "/etc/bind/jarkom/redzone.IT17.com";
-};' > /etc/bind/named.conf.local
-
-cp /etc/bind/db.local /etc/bind/jarkom/redzone.IT17.com
-
-echo ' 
-;
-; BIND data file for local loopback interface
-;
-$TTL    604800
-@       IN      SOA     redzone.IT17.com. root.redzone.IT17.com. (
-                        2024050301      ; Serial
-                         604800         ; Refresh
-                          86400         ; Retry
-                        2419200         ; Expire
-                         604800 )       ; Negative Cache TTL
-;
-@       IN      NS      redzone.IT17.com.
-@       IN      A       10.72.1.4
-www     IN      CNAME   redzone.IT17.com.' > /etc/bind/jarkom/redzone.IT17.com
-
-service bind9 restart
+service isc-dhcp-server restart
 ```
 #### Output
 <img src="img/3.1.png">
 <img src="img/3.2.png">
 
-### Soal 4
+### Soal 3
 
-Markas pusat meminta dibuatnya domain khusus untuk menaruh informasi persenjataan dan suplai yang tersebar. Informasi persenjataan dan suplai tersebut mengarah ke Mylta dan domain yang ingin digunakan adalah loot.xxxx.com dengan alias www.loot.xxxx.com
+Client yang melalui House Atreides mendapatkan range IP dari [prefix IP].2.15 - [prefix IP].2.25 dan [prefix IP].2 .200 - [prefix IP].2.210
 
-
-#### Script
+Konfigurasi DHCP Server pada Mohiam
 
 ```
-echo 'zone "loot.IT17.com" {
-        type master;
-        file "/etc/bind/jarkom/loot.IT17.com";
-};' >> /etc/bind/named.conf.local
+echo 'nameserver 10.72.3.1' >> /etc/resolv.conf   # Pastikan DNS Server sudah berjalan 
+apt-get update
+apt-get install isc-dhcp-server -y
 
-cp /etc/bind/db.local /etc/bind/jarkom/loot.IT17.com
+interfaces="INTERFACESv4=\"eth0\"
+INTERFACESv6=\"\"
+"
+echo "$interfaces" > /etc/default/isc-dhcp-server
 
-echo ' 
-;
-; BIND data file for local loopback interface
-;
-$TTL    604800
-@       IN      SOA     loot.IT17.com. root.loot.IT17.com. (
-                        2024050301      ; Serial
-                         604800         ; Refresh
-                          86400         ; Retry
-                        2419200         ; Expire
-                         604800 )       ; Negative Cache TTL
-;
-@       IN      NS      loot.IT17.com.
-@       IN      A       10.72.2.4
-www     IN      CNAME   loot.IT17.com.' > /etc/bind/jarkom/loot.IT17.com
+subnet="option domain-name \"example.org\";
+option domain-name-servers ns1.example.org, ns2.example.org;
 
-service bind9 restart
+subnet 10.72.1.0 netmask 255.255.255.0 {
+    range 10.72.1.14 10.72.1.28;
+    range 10.72.1.49 10.72.1.70;
+    option routers 10.72.1.0;
+}
+
+subnet 10.72.2.0 netmask 255.255.255.0 {
+    range 10.72.2.15 10.72.2.25;
+    range 10.72.2.200 10.72.2.210;
+    option routers 10.72.2.0;
+}
+
+subnet 10.72.3.0 netmask 255.255.255.0 {
+}
+
+subnet 10.72.4.0 netmask 255.255.255.0 {
+}
+"
+echo "$subnet" > /etc/dhcp/dhcpd.conf
+
+service isc-dhcp-server restart
 ```
 #### Output
 <img src="img/4.1.png">
