@@ -270,9 +270,6 @@ echo "$subnet" > /etc/dhcp/dhcpd.conf
 
 service isc-dhcp-server restart
 ```
-#### Output
-<img src="img/3.1.png">
-<img src="img/3.2.png">
 
 ### Soal 3
 
@@ -315,419 +312,428 @@ echo "$subnet" > /etc/dhcp/dhcpd.conf
 
 service isc-dhcp-server restart
 ```
+
+### Soal 4
+
+Client mendapatkan DNS dari Princess Irulan dan dapat terhubung dengan internet melalui DNS tersebut 
+
+Ubah konfigurasi DHCP Server pada Mohiam agar mengarah ke IP DNS (10.72.3.1)
+```
+subnet 10.72.1.0 netmask 255.255.255.0 {
+    range 10.72.1.14 10.72.1.28;
+    range 10.72.1.49 10.72.1.70;
+    option routers 10.72.1.0;
+    option broadcast-address 10.72.1.255;
+    option domain-name-servers 10.72.3.1;
+}
+
+subnet 10.72.2.0 netmask 255.255.255.0 {
+    range 10.72.2.15 10.72.2.25;
+    range 10.72.2.200 10.72.2.210;
+    option routers 10.72.2.0;
+    option broadcast-address 10.72.2.255;
+    option domain-name-servers 10.72.3.1;
+}
+
+subnet 10.72.3.0 netmask 255.255.255.0 {
+}
+
+subnet 10.72.4.0 netmask 255.255.255.0 {
+}
+```
+Lakukan konfigurasi DNS Server pada Irulan
+```
+nano /etc/bind/named.conf.options
+forwarders {
+  192.168.122.1;
+}
+allow-query{any;};
+listen-on-v6 { any; };
+```
+
 #### Output
+Uji coba ping google.com di client
 <img src="img/4.1.png">
 <img src="img/4.2.png">
 
+
+
 ### Soal 5
 
-Markas pusat meminta dibuatnya domain khusus untuk menaruh informasi persenjataan dan suplai yang tersebar. Informasi persenjataan dan suplai tersebut mengarah ke Mylta dan domain yang ingin digunakan adalah loot.xxxx.com dengan alias www.loot.xxxx.com 
+Durasi DHCP server meminjamkan alamat IP kepada Client yang melalui House Harkonen selama 5 menit sedangkan pada client yang melalui House Atreides selama 20 menit. Dengan waktu maksimal dialokasikan untuk peminjaman alamat IP selama 87 menit 
 
-#### Script
+Tambahkan konfigurasi DHCP Server pada Mohiam
 
-Dapat dilihat pada nomor 2, 3, dan 4
+```
+subnet 10.72.1.0 netmask 255.255.255.0 {
+    range 10.72.1.14 10.72.1.28;
+    range 10.72.1.49 10.72.1.70;
+    option routers 10.72.1.0;
+    option broadcast-address 10.72.1.255;
+    option domain-name-servers 10.72.3.1;
+    default-lease-time 300;
+    max-lease-time 5220;
+}
+
+subnet 10.72.2.0 netmask 255.255.255.0 {
+    range 10.72.2.15 10.72.2.25;
+    range 10.72.2.200 10.72.2.210;
+    option routers 10.72.2.0;
+    option broadcast-address 10.72.2.255;
+    option domain-name-servers 10.72.3.1;
+    default-lease-time 1200;
+    max-lease-time 5220;
+}
+
+subnet 10.72.3.0 netmask 255.255.255.0 {
+}
+
+subnet 10.72.4.0 netmask 255.255.255.0 {
+}
+```
 
 #### Output
+<img src="img/5.1.png">
+<img src="img/5.2.png">
 
-Dapat dilihat pada nomor 2, 3, dan 4
+### Soal 6
 
+Vladimir Harkonen memerintahkan setiap worker(harkonen) PHP, untuk melakukan konfigurasi virtual host untuk website berikut dengan menggunakan php 7.3.
+
+Melakukan konfigurasi sebagai berikut pada php worker untuk melakukan download dan unzip menggunakan command wget
+
+```
+wget -O '/var/www/harkonen.IT17.com' 'https://drive.usercontent.google.com/download?id=1lmnXJUbyx1JDt2OA5z_1dEowxozfkn30&export=download&authuser=0'
+unzip -o /var/www/harkonen.IT17.com -d /var/www/
+rm /var/www/harkonen.IT17.com
+mv /var/www/modul-3 /var/www/harkonen.IT17.com
+```
+
+melakukan konfigurasi pada nginx
+
+```
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/harkonen.IT17.com
+ln -s /etc/nginx/sites-available/harkonen.IT17.com /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
+
+echo 'server {
+    listen 80;
+    server_name _;
+
+    root /var/www/harkonen.IT17.com;
+    index index.php index.html index.html;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php7.3-fpm.sock; 
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}' > /etc/nginx/sites-available/harkonen.IT17.com
+
+service nginx restart
+```
+#### Output
+Jalankan Perintah lynx localhost pada masing-masing worker
+<img src="img/6.1.png">
+<img src="img/6.2.png">
 
 ### Soal 7
 
-Akhir-akhir ini seringkali terjadi serangan siber ke DNS Server Utama, sebagai tindakan antisipasi kamu diperintahkan untuk membuat DNS Slave di Georgopol untuk semua domain yang sudah dibuat sebelumnya
+Aturlah agar Stilgar dari fremen dapat dapat bekerja sama dengan maksimal, lalu lakukan testing dengan 5000 request dan 150 request/second.
 
-
-#### Script
-
-##### Pochinki
-```
-echo 'zone "airdrop.IT17.com" {
-        type master;
-        file "/etc/bind/jarkom/airdrop.IT17.com";
-        allow-transfer { 10.72.2.3; };
-        also-notify { 10.72.2.3; };
-};' > /etc/bind/named.conf.local
-
-
-echo 'zone "redzone.IT17.com" {
-        type master;
-        file "/etc/bind/jarkom/redzone.IT17.com";
-        also-notify { 10.72.2.3; };
-        allow-transfer { 10.72.2.3; };
-
-};' >> /etc/bind/named.conf.local
-
-echo 'zone "loot.IT17.com" {
-        type master;
-        file "/etc/bind/jarkom/loot.IT17.com";
-        also-notify { 10.72.2.3; };
-        allow-transfer { 10.72.2.3; }; 
-   
-};' >>/etc/bind/named.conf.local
-```
-##### Georgopol
-```
-echo 'zone "airdrop.IT17.com" {
-    type slave;
-    masters { 10.72.3.2; }; // Masukan IP EniesLobby tanpa tanda petik
-    file "/var/lib/bind/airdrop.IT17.com";
-};
-
-zone "redzone.IT17.com" {
-    type slave;
-    masters { 10.72.3.2; }; // Masukan IP EniesLobby tanpa tanda petik
-    file "/var/lib/bind/redzone.IT17.com";
-};
-
-zone "loot.IT17.com" {
-    type slave;
-    masters { 10.72.3.2; }; // Masukan IP EniesLobby tanpa tanda petik
-    file "/var/lib/bind/loot.IT17.com";
-};'  > /etc/bind/named.conf.local
+Domain pada DNS Server diarahkan ke Load Balancer Stilgar
 
 ```
+atreides="
+;
+;BIND data file for local loopback interface
+;
+\$TTL    604800
+@    IN    SOA    atreides.IT17.com. root.atreides.IT17.com. (
+        2        ; Serial
+                604800        ; Refresh
+                86400        ; Retry
+                2419200        ; Expire
+                604800 )    ; Negative Cache TTL
+;                   
+@    IN    NS    atreides.IT17.com.
+@       IN    A    10.72.4.2
+"
+echo "$atreides" > /etc/bind/jarkom/atreides.IT17.com
+
+harkonen="
+;
+;BIND data file for local loopback interface
+;
+\$TTL    604800
+@    IN    SOA    harkonen.IT17.com.com. root.harkonen.IT17.com. (
+        2        ; Serial
+                604800        ; Refresh
+                86400        ; Retry
+                2419200        ; Expire
+                604800 )    ; Negative Cache TTL
+;                   
+@    IN    NS    harkonen.IT17.com.
+@       IN    A    10.72.4.2
+"
+echo "$harkonen" > /etc/bind/jarkom/harkonen.IT17.com
+```
+Konfigurasi untuk nginx pada node stilgar 
+```
+
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/lb_php
+
+
+echo ' upstream worker {
+    server 10.72.1.1;
+    server 10.72.1.2;
+    server 10.72.1.3;
+}
+
+server {
+    listen 80;
+    server_name harkonen.IT17.com www.harkonen.IT17.com;
+
+    root /var/www/html;
+
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location / {
+        proxy_pass http://worker;
+        auth_basic "Restricted Content";
+auth_basic_user_file /etc/nginx/supersecret/htpasswd;
+    }
+} ' > /etc/nginx/sites-available/lb_php
+
+ln -s /etc/nginx/sites-available/lb_php /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
+
+```
+
 #### Output
+Pada node Paul (client) jalankan command " ab -n 1000 -c 100 http://granz.channel.it03.com/ "
 <img src="img/7.1.png">
-<img src="img/7.2.png">
-<img src="img/7.3.png">
 
 ### Soal 8
 
-Kamu juga diperintahkan untuk membuat subdomain khusus melacak airdrop berisi peralatan medis dengan subdomain medkit.airdrop.xxxx.com yang mengarah ke Lipovka
+Karena diminta untuk menuliskan peta tercepat menuju spice, buatlah analisis hasil testing dengan 500 request dan 50 request/second masing-masing algoritma Load Balancer dengan ketentuan sebagai berikut:
+```
+1. Nama Algoritma Load Balancer.
+2. Report hasil testing pada Apache Benchmark.
+3. Grafik request per second untuk masing masing algoritma.
+4. Analisis.
+```
+konfigurasinya sama dengan Soal 7, tinggal menambahkan beberapa konfigurasi untuk algoritma load balancer nya
 
-
-#### Script
+#### Round-robin
 
 ```
-echo '
-;
-; BIND data file for local loopback interface
-;
-$TTL    604800
-@       IN      SOA     airdrop.IT17.com. root.airdrop.IT17.com. (
-                        2023101001      ; Serial
-                         604800         ; Refresh
-                          86400         ; Retry
-                        2419200         ; Expire
-                         604800 )       ; Negative Cache TTL
-;
-@       IN      NS      airdrop.IT17.com.
-@       IN      A       10.72.1.3   ; 
-www     IN      CNAME   airdrop.IT17.com.
-medkit  IN      A       10.72.1.2     ;' > /etc/bind/jarkom/airdrop.IT17.com
-
-service bind9 restart
+echo ' upstream worker {
+    server 10.72.1.1;
+    server 10.72.1.2;
+    server 10.72.1.3;
+}
 ```
+#### Generic Hash 
+
+```
+echo ' upstream worker {
+    hash $request_uri consistent;
+    server 10.72.1.1;
+    server 10.72.1.2;
+    server 10.72.1.3;
+}
+
+```
+#### Least Connetion 
+
+```
+echo ' upstream worker {
+    least_conn;
+    server 10.72.1.1;
+    server 10.72.1.2;
+    server 10.72.1.3;
+}
+
+```
+#### IP hash  
+
+```
+echo ' upstream worker {
+    ip_hash;
+    server 10.72.1.1;
+    server 10.72.1.2;
+    server 10.72.1.3;
+}
+
+```
+#### Stilgar.sh
+```
+
+echo ' upstream worker {
+    #    hash $request_uri consistent;
+    #    least_conn;
+    #    ip_hash;
+    server 10.72.1.1;
+    server 10.72.1.2;
+    server 10.72.1.3;
+}
+
+server {
+    listen 80;
+    server_name harkonen.IT17.com www.harkonen.IT17.com;
+
+    root /var/www/html;
+
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location / {
+        proxy_pass http://worker;
+
+} ' > /etc/nginx/sites-available/lb_php
+
+ln -s /etc/nginx/sites-available/lb_php /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
+```
+
+
 #### Output
-<img src="img/8.1.png">
-<img src="img/8.2.png">
+
+#### Round Robin
+<img src="img/8.rr.png">
+
+#### Generic Hash
+<img src="img/8.gh.png">
+
+#### Least Connection
+<img src="img/8.ls.png">
+
+#### IP Hash
+<img src="img/8.hash.png">
+
+#### Grafik
+<img src="img/Figure_1.png">
 
 ### Soal 9
 
-Terkadang red zone yang pada umumnya di bombardir artileri akan dijatuhi bom oleh pesawat tempur. Untuk melindungi warga, kita diperlukan untuk membuat sistem peringatan air raid dan memasukkannya ke subdomain siren.redzone.xxxx.com dalam folder siren dan pastikan dapat diakses secara mudah dengan menambahkan alias www.siren.redzone.xxxx.com dan mendelegasikan subdomain tersebut ke Georgopol dengan alamat IP menuju radar di Severny
+Dengan menggunakan algoritma Least-Connection, lakukan testing dengan menggunakan 3 worker, 2 worker, dan 1 worker sebanyak 1000 request dengan 10 request/second, kemudian tambahkan grafiknya pada peta.
 
+Masukan script yang sama seperti no.7 hanya saja jumlah worker disesuaikan
 
-#### Script
-##### Pochinki
-
+##### 3 Worker
 ```
-echo ';
-; BIND data file for local loopback interface
-;
-$TTL    604800
-@       IN      SOA     redzone.IT17.com. root.redzone.IT17.com. (
-                        2023101001      ; Serial
-                         604800         ; Refresh
-                          86400         ; Retry
-                        2419200         ; Expire
-                         604800 )       ; Negative Cache TTL
-;
-@       IN      NS      redzone.IT17.com.
-@       IN      A       10.72.1.4
-www     IN      CNAME   redzone.IT17.com.
-ns1     IN      A       10.72.2.3     ; IP georgopol
-siren   IN      NS      ns1' > /etc/bind/jarkom/redzone.IT17.com
-
-
-echo "options {
-    directory \"/var/cache/bind\";
-
-    // If there is a firewall between you and nameservers you want
-    // to talk to, you may need to fix the firewall to allow multiple
-    // ports to talk.  See http://www.kb.cert.org/vuls/id/800113
-
-    // If your ISP provided one or more IP addresses for stable
-    // nameservers, you probably want to use them as forwarders.
-    // Uncomment the following block, and insert the addresses replacing
-    // the all-0's placeholder.  
-    // };
-
-    //========================================================================
-    // If BIND logs error messages about the root key being expired,
-    // you will need to update your keys.  See https://www.isc.org/bind-keys
-    //========================================================================
-    //dnssec-validation auto;
-
-    allow-query { any; };
-    auth-nxdomain no;
-    listen-on-v6 { any; };
-};" > /etc/bind/named.conf.options
-
-service bind9 restart
+echo ' upstream worker {
+    #    hash $request_uri consistent;
+    #    least_conn;
+    #    ip_hash;
+    server 10.72.1.1;
+    server 10.72.1.2;
+    server 10.72.1.3;
+}
 ```
-##### Georgopol
+
+##### 2 Worker
 ```
-echo "
-options {
-        directory \"/var/cache/bind\";
-        allow-query{any;};
-        auth-nxdomain no;    # conform to RFC1035
-        listen-on-v6 { any; };
-};
-" > /etc/bind/named.conf.options
-
-echo '
-
-zone "siren.redzone.IT17.com"{
-        type master;
-        file "/etc/bind/siren/siren.redzone.IT17.com";
-};
-'>> /etc/bind/named.conf.local
-
-mkdir /etc/bind/siren
-
-echo "
-\$TTL    604800
-@       IN      SOA     siren.redzone.IT17.com. root.siren.redzone.IT17.com. (
-                        2021100401      ; Serial
-                        604800         ; Refresh
-                        86400         ; Retry
-                        2419200         ; Expire
-                        604800 )       ; Negative Cache TTL
-;
-@               IN      NS      siren.redzone.IT17.com.
-@               IN      A       10.72.1.4       ;ip skypie
-www             IN      CNAME   siren.redzone.IT17.com.
-" > /etc/bind/siren/siren.redzone.IT17.com
-service bind9 restart
+echo ' upstream worker {
+    #    hash $request_uri consistent;
+    #    least_conn;
+    #    ip_hash;
+    #    server 10.72.1.1;
+    server 10.72.1.2;
+    server 10.72.1.3;
+}
 ```
+
+##### 1 Worker
+```
+echo ' upstream worker {
+    #    hash $request_uri consistent;
+    #    least_conn;
+    #    ip_hash;
+    #    server 10.72.1.1;
+    #  	 server 10.72.1.2;
+    server 10.72.1.3;
+}
+```
+
 
 #### Output
-<img src="img/9.1.png">
-<img src="img/9.2.png">
+#### 3 Worker
+<img src="img/9.3w.png">
+#### 2 Worker
+<img src="img/9.2w.png">
+#### 1 Worker
+<img src="img/9.1w.png">
+#### Grafik
+<img src="img/Figure_2.png">
 
 ### Soal 10
 
-Markas juga meminta catatan kapan saja pesawat tempur tersebut menjatuhkan bom, maka buatlah subdomain baru di subdomain siren yaitu log.siren.redzone.xxxx.com serta aliasnya www.log.siren.redzone.xxxx.com yang juga mengarah ke Severny
+Selanjutnya coba tambahkan keamanan dengan konfigurasi autentikasi di LB dengan dengan kombinasi username: “secmart” dan password: “kcksyyy”, dengan yyy merupakan kode kelompok. Terakhir simpan file “htpasswd” nya di /etc/nginx/supersecret/
 
-
-#### Script
-##### Georgopol
+Membuat folder rahasisakita dengan " mkdir /etc/nginx/supersecret " lalu " htpasswd -c /etc/nginx/supersecret/htpasswd secmart " untuk membuat kredensial.
 
 ```
-echo "
-\$TTL    604800
-@       IN      SOA     siren.redzone.IT17.com. root.siren.redzone.IT17.com. (
-                        2021100401      ; Serial
-                        604800         ; Refresh
-                        86400         ; Retry
-                        2419200         ; Expire
-                        604800 )       ; Negative Cache TTL
-;
-@               IN      NS      siren.redzone.IT17.com.
-@               IN      A       10.72.1.4       ;
-www             IN      CNAME   siren.redzone.IT17.com.
-log             IN      A       10.72.1.4      ; 
-www.log         IN      CNAME   log.siren.redzone.IT17.com." > /etc/bind/siren/siren.redzone.IT17.com
-service bind9 restart
+Username: secmart
+Password: kcksIT17
+
+```
+Menambahkan script didalam Stilgar
 ```
 
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/lb_php
+mkdir /etc/nginx/supersecret
+htpasswd -c /etc/nginx/supersecret/htpasswd secmart
+
+
+echo ' upstream worker {
+    #    hash $request_uri consistent;
+    #    least_conn;
+    #    ip_hash;
+    server 10.72.1.1;
+    server 10.72.1.2;
+    server 10.72.1.3;
+}
+
+server {
+    listen 80;
+    server_name harkonen.IT17.com www.harkonen.IT17.com;
+
+    root /var/www/html;
+
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location / {
+        proxy_pass http://worker;
+        auth_basic "Restricted Content";
+	auth_basic_user_file /etc/nginx/supersecret/htpasswd;
+    }
+
+} ' > /etc/nginx/sites-available/lb_php
+
+ln -s /etc/nginx/sites-available/lb_php /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
+
+```
 #### Output
+Jalankan " lynx http://harkonen.IT17.com/ " pada Paul (Client) untuk melihat apakah autentikasi bisa berfungsi.
 <img src="img/10.1.png">
 <img src="img/10.2.png">
-
-### Soal 12
-
-Karena pusat ingin sebuah website yang ingin digunakan untuk memantau kondisi markas lainnya maka deploy lah webiste ini (cek resource yg lb) pada severny menggunakan apache
-
-
-#### Script
-##### Serverny
-
-```
-service apache2 restart
-service apache2 status
-
-echo '
-<VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-    DocumentRoot /var/www/html/severny
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-' > /etc/apache2/sites-available/000-default.conf
-
-mkdir -p /var/www/html/severny
-
-echo '
-<?php
-$hostname = gethostname();
-$date = date('Y-m-d H:i:s');
-$php_version = phpversion();
-$username = get_current_user();
-
-
-
-echo "Hello World!<br>";
-echo "Saya adalah: $username<br>";
-echo "Saat ini berada di: $hostname<br>";
-echo "Versi PHP yang saya gunakan: $php_version<br>";
-echo "Tanggal saat ini: $date<br>";
-?>
-' > /var/www/html/severny/index.php
-```
-
-#### Output
-<img src="img/12.1.png">
-
-### Soal 13
-
-Tapi pusat merasa tidak puas dengan performanya karena traffic yag tinggi maka pusat meminta kita memasang load balancer pada web nya, dengan Severny, Stalber, Lipovka sebagai worker dan Mylta sebagai Load Balancer menggunakan apache sebagai web server nya dan load balancernya
-
-
-#### Script
-##### Mylta
-
-```
-service apache2 start
-a2enmod proxy
-a2enmod proxy_http
-a2enmod proxy_balancer
-a2enmod lbmethod_byrequests
-
-service apache2 restart
-service apache2 status
-
-echo '<VirtualHost *:80>
-   <Proxy balancer://mycluster>
-BalancerMember http://10.72.1.4:80
-BalancerMember http://10.72.1.2:80
-      BalancerMember http://10.72.1.3:80
-    </Proxy>
-    ProxyPreserveHost On
-    ProxyPass / balancer://mycluster/
-    ProxyPassReverse / balancer://mycluster/
-</VirtualHost>' >/etc/apache2/sites-available/000-default.conf
-
-service apache2 restart
-service apache2 status
-service apache2 start
-
-```
-
-##### Stalber
-
-```
-service apache2 restart
-service apache2 status
-
-echo '
-<VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-    DocumentRoot /var/www/html/stalber
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-' > /etc/apache2/sites-available/000-default.conf
-
-mkdir -p /var/www/html/stalber
-
-echo '
-<?php
-$hostname = gethostname();
-$date = date('Y-m-d H:i:s');
-$php_version = phpversion();
-$username = get_current_user();
-
-
-
-echo "Hello World!<br>";
-echo "Saya adalah: $username<br>";
-echo "Saat ini berada di: $hostname<br>";
-echo "Versi PHP yang saya gunakan: $php_version<br>";
-echo "Tanggal saat ini: $date<br>";
-?>
-' > /var/www/html/stalber/index.php
-```
-
-##### Serverny
-
-```
-service apache2 restart
-service apache2 status
-
-echo '
-<VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-    DocumentRoot /var/www/html/serverny
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-' > /etc/apache2/sites-available/000-default.conf
-
-mkdir -p /var/www/html/serverny
-
-echo '
-<?php
-$hostname = gethostname();
-$date = date('Y-m-d H:i:s');
-$php_version = phpversion();
-$username = get_current_user();
-
-
-
-echo "Hello World!<br>";
-echo "Saya adalah: $username<br>";
-echo "Saat ini berada di: $hostname<br>";
-echo "Versi PHP yang saya gunakan: $php_version<br>";
-echo "Tanggal saat ini: $date<br>";
-?>
-' > /var/www/html/serverny/index.php
-```
-##### Lipovka
-
-```
-service apache2 restart
-service apache2 status
-
-echo '
-<VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-    DocumentRoot /var/www/html/lipovka
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-' > /etc/apache2/sites-available/000-default.conf
-
-mkdir -p /var/www/html/lipovka
-
-echo '
-<?php
-$hostname = gethostname();
-$date = date('Y-m-d H:i:s');
-$php_version = phpversion();
-$username = get_current_user();
-
-
-
-echo "Hello World!<br>";
-echo "Saya adalah: $username<br>";
-echo "Saat ini berada di: $hostname<br>";
-echo "Versi PHP yang saya gunakan: $php_version<br>";
-echo "Tanggal saat ini: $date<br>";
-?>
-' > /var/www/html/lipovka/index.php
-```
-#### Output
-<img src="img/13.1.png">
-<img src="img/13.2.png">
+<img src="img/10.3.png">
