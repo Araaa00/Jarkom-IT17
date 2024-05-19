@@ -440,7 +440,6 @@ service nginx restart
 #### Output
 Jalankan Perintah lynx localhost pada masing-masing worker
 <img src="img/6.1.png">
-<img src="img/6.2.png">
 
 ### Soal 7
 
