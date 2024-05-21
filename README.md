@@ -519,7 +519,7 @@ service nginx restart
 ```
 
 #### Output
-Pada node Paul (client) jalankan command ' ab -n 1000 -c 100 http://harkonen.IT17.com/ '
+Pada node Paul (client) jalankan command ' ab -n 5000 -c 150 http://harkonen.IT17.com/ '
 <img src="img/7.1.png">
 
 ### Soal 8
