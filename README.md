@@ -718,4 +718,12 @@ route add -net 0.0.0.0 netmask 0.0.0.0 gw 10.76.8.1
 ```
 
 ### Testing
-[Klik di sini untuk menonton video](path/to/video.mp4)
+#### Pembagian IP per node
+<img src="img/tes1.1">
+<img src="img/tes1.2">
+<img src="img/tes1.3">
+<img src="img/tes1.4">
+<img src="img/tes1.5">
+
+
+
