@@ -21,43 +21,43 @@ Menggunakan perhitungan ``CIDR`` dengan menggunakan ``GNS3`` dan ``VLSM`` dengan
 
 #### Penggabungan B
 <img src="img/B.png">
-<img src="img/B1">
+<img src="img/B1.png">
 
 #### Penggabungan C
 <img src="img/C.png">
-<img src="img/C1">
+<img src="img/C1.png">
 
 #### Penggabungan D
 <img src="img/D.png">
-<img src="img/D1">
+<img src="img/D1.png">
 
 #### Penggabungan E
 <img src="img/E.png">
-<img src="img/E1">
+<img src="img/E1.png">
 
 #### Penggabungan F
 <img src="img/F.png">
-<img src="img/F1">
+<img src="img/F1.png">
 
 #### Penggabungan G
 <img src="img/G.png">
-<img src="img/G1">
+<img src="img/G1.png">
 
 #### Penggabungan H
 <img src="img/H.png">
-<img src="img/H1">
+<img src="img/H1.png">
 
 #### Penggabungan I
 <img src="img/I.png">
-<img src="img/I1">
+<img src="img/I1.png">
 
 #### Penggabungan J
 <img src="img/J.png">
-<img src="img/J1">
+<img src="img/J1.png">
 
 #### Penggabungan K
 <img src="img/K.png">
-<img src="img/K1">
+<img src="img/K1.png">
 
 ### Tree
 Setelah dilakukannya ``penggabungan IP``, sekarang kita melakukan pembagian IP dengan menggunakan ``tree`` pada masing-masing kelompok yang telah dibuat sebelumnya sebagai berikut
@@ -65,7 +65,7 @@ Setelah dilakukannya ``penggabungan IP``, sekarang kita melakukan pembagian IP d
 
 ### Pembagian IP
 Berikut merupakan hasil dari pembagian IP berdasarkan Tree yang telah dibuat sebelumnya 
-<img src="img/ip">
+<img src="img/ip.png">
 
 ### Konfigurasi network 
 #### Jawa
@@ -719,11 +719,11 @@ route add -net 0.0.0.0 netmask 0.0.0.0 gw 10.76.8.1
 
 ### Testing
 #### Pembagian IP per node
-<img src="img/tes1.1">
-<img src="img/tes1.2">
-<img src="img/tes1.3">
-<img src="img/tes1.4">
-<img src="img/tes1.5">
+<img src="img/tes1.1.png">
+<img src="img/tes1.2.png">
+<img src="img/tes1.3.png">
+<img src="img/tes1.4.png">
+<img src="img/tes1.5.png">
 
 
 
